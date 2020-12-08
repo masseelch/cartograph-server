@@ -39,24 +39,51 @@ func (h *Hub) gameData() []byte {
 	return j
 }
 
+func (h *Hub) playerData(nickname string) []byte {
+	j, err := json.Marshal(h.game.Players[nickname])
+	if err != nil {
+		panic(err)
+	}
+
+	return j
+}
+
+func (h *Hub) Clear() {
+	h.game = NewGame()
+}
+
 func (h *Hub) Run() {
 	for {
 		select {
-		case client := <-h.register:
-			h.clients[client.nickname] = client
-			if _, ok := h.game.Players[client.nickname]; !ok {
-				h.game.Players[client.nickname] = NewDefaultPlan()
+		case c := <-h.register:
+			h.clients[c.nickname] = c
+			if _, ok := h.game.Players[c.nickname]; !ok {
+				h.game.Players[c.nickname] = &Player{c.nickname, NewDefaultPlan()}
 			}
-			client.send <- h.gameData()
+			c.send <- h.gameData()
+
+			// Tell all other clients that there is a new one.
+			d := h.playerData(c.nickname)
+			for _, client := range h.clients {
+				if client.nickname != c.nickname {
+					select {
+					case client.send <- d:
+					default:
+						close(client.send)
+						delete(h.clients, client.nickname)
+					}
+				}
+			}
 		case client := <-h.unregister:
 			if _, ok := h.clients[client.nickname]; ok {
 				delete(h.clients, client.nickname)
 				close(client.send)
 			}
-		case <-h.broadcast:
+		case updatedClient := <-h.broadcast:
+			d := h.playerData(updatedClient.nickname)
 			for _, client := range h.clients {
 				select {
-				case client.send <- h.gameData():
+				case client.send <- d:
 				default:
 					close(client.send)
 					delete(h.clients, client.nickname)

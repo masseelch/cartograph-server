@@ -11,9 +11,22 @@ Game _$GameFromJson(Map<String, dynamic> json) {
     ..id = json['id'] as String
     ..players = (json['players'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(
-          k, e == null ? null : Plan.fromJson(e as Map<String, dynamic>)),
+          k, e == null ? null : Player.fromJson(e as Map<String, dynamic>)),
     );
 }
+
+Player _$PlayerFromJson(Map<String, dynamic> json) {
+  return Player()
+    ..nickname = json['nickname'] as String
+    ..plan = json['plan'] == null
+        ? null
+        : Plan.fromJson(json['plan'] as Map<String, dynamic>);
+}
+
+Map<String, dynamic> _$PlayerToJson(Player instance) => <String, dynamic>{
+      'nickname': instance.nickname,
+      'plan': instance.plan?.toJson(),
+    };
 
 Plan _$PlanFromJson(Map<String, dynamic> json) {
   return Plan()

@@ -17,9 +17,14 @@ func main() {
 		cors.AllowAll().Handler,
 	)
 
+	r.Get("/reboot", func(w http.ResponseWriter, r *http.Request) {
+		hub.Clear()
+	})
+
 	r.HandleFunc("/{nickname:.+}", func(w http.ResponseWriter, r *http.Request) {
 		cartograph.ServeWs(hub, w, r)
 	})
+
 
 	err := http.ListenAndServe(":8888", r)
 	if err != nil {

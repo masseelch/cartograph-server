@@ -43,8 +43,8 @@ func (c *Client) readPump() {
 			break
 		}
 
-		// Save the sent by frontend.
-		if err := json.Unmarshal(message, c.hub.game.Players[c.nickname]); err != nil {
+		// Get the new tile data.
+		if err := json.Unmarshal(message, &c.hub.game.Players[c.nickname].Plan.Tiles); err != nil {
 			log.Printf("error: %v\n", err)
 		}
 

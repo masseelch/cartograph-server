@@ -21,25 +21,12 @@ enum Terrain {
   water,
 }
 
-extension TerrainExtension on Terrain {
-  String value() {
-    switch (this) {
-      case Terrain.field:
-        return "Ack";
-      case Terrain.forrest:
-        return "Wal";
-      case Terrain.monster:
-        return "Mon";
-      case Terrain.mountains:
-        return "Ber";
-      case Terrain.village:
-        return "Dor";
-      case Terrain.water:
-        return "Was";
-      default:
-        return "";
-    }
-  }
+class Terrains {
+  Terrains(this._list);
+
+  final List<Terrain> _list;
+
+  List<int> toJson() => this._list?.map((e) => _$TerrainEnumMap[e])?.toList();
 }
 
 @JsonSerializable(createToJson: false)
@@ -47,9 +34,21 @@ class Game {
   Game();
 
   String id;
-  Map<String, Plan> players;
+  Map<String, Player> players;
 
   factory Game.fromJson(Map<String, dynamic> json) => _$GameFromJson(json);
+}
+
+@JsonSerializable()
+class Player {
+  Player();
+
+  String nickname;
+  Plan plan;
+
+  factory Player.fromJson(Map<String, dynamic> json) => _$PlayerFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PlayerToJson(this);
 }
 
 @JsonSerializable()
