@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 	"github.com/masseelch/cartograph"
 	"github.com/rs/cors"
 	"log"
@@ -14,6 +15,7 @@ func main() {
 
 	r := chi.NewRouter()
 	r.Use(
+		middleware.DefaultLogger,
 		cors.AllowAll().Handler,
 	)
 
@@ -26,7 +28,7 @@ func main() {
 	})
 
 
-	err := http.ListenAndServe(":8888", r)
+	err := http.ListenAndServe(":8765", r)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}

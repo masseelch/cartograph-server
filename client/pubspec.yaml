@@ -25,8 +25,12 @@ flutter:
   uses-material-design: true
   assets:
     - images/acker.png
+    - images/black_coin.png
     - images/dorf.png
     - images/gebirge.png
+    - images/gebirge_coin.jpg
+    - images/golden_coin.png
     - images/monster.png
+    - images/ruinen.png
     - images/wald.png
     - images/wasser.png

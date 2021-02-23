@@ -28,6 +28,21 @@ Map<String, dynamic> _$PlayerToJson(Player instance) => <String, dynamic>{
       'plan': instance.plan?.toJson(),
     };
 
+Rating _$RatingFromJson(Map<String, dynamic> json) {
+  return Rating()
+    ..first = json['first'] as int
+    ..second = json['second'] as int
+    ..gold = json['gold'] as int
+    ..monster = json['monster'] as int;
+}
+
+Map<String, dynamic> _$RatingToJson(Rating instance) => <String, dynamic>{
+      'first': instance.first,
+      'second': instance.second,
+      'gold': instance.gold,
+      'monster': instance.monster,
+    };
+
 Plan _$PlanFromJson(Map<String, dynamic> json) {
   return Plan()
     ..ruins = (json['ruins'] as List)
@@ -35,12 +50,19 @@ Plan _$PlanFromJson(Map<String, dynamic> json) {
         ?.toList()
     ..tiles = (json['tiles'] as List)
         ?.map((e) => _$enumDecodeNullable(_$TerrainEnumMap, e))
+        ?.toList()
+    ..gold = json['gold'] as int
+    ..ratings = (json['ratings'] as List)
+        ?.map((e) =>
+            e == null ? null : Rating.fromJson(e as Map<String, dynamic>))
         ?.toList();
 }
 
 Map<String, dynamic> _$PlanToJson(Plan instance) => <String, dynamic>{
       'ruins': instance.ruins?.map((e) => e?.toJson())?.toList(),
       'tiles': instance.tiles?.map((e) => _$TerrainEnumMap[e])?.toList(),
+      'gold': instance.gold,
+      'ratings': instance.ratings?.map((e) => e?.toJson())?.toList(),
     };
 
 T _$enumDecode<T>(
@@ -83,6 +105,7 @@ const _$TerrainEnumMap = {
   Terrain.mountains: 4,
   Terrain.village: 5,
   Terrain.water: 6,
+  Terrain.mountainsGoldStrike: 7,
 };
 
 Pos _$PosFromJson(Map<String, dynamic> json) {

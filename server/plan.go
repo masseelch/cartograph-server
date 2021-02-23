@@ -15,6 +15,7 @@ const (
 	Mountains
 	Village
 	Water
+	MountainsGoldStrike
 )
 
 type (
@@ -30,8 +31,17 @@ type (
 	// A plan to play on.
 	// Pos(0,0) is the top-left corner of the map.
 	Plan struct {
-		Tiles []Terrain `json:"tiles"`
-		Ruins []Pos     `json:"ruins"`
+		Tiles   []Terrain `json:"tiles"`
+		Ruins   []Pos     `json:"ruins"`
+		Gold    int       `json:"gold"`
+		Ratings [4]Rating `json:"ratings"`
+	}
+
+	Rating struct {
+		First   int `json:"first"`
+		Second  int `json:"second"`
+		Gold    int `json:"gold"`
+		Monster int `json:"monster"`
 	}
 )
 
@@ -116,6 +126,9 @@ func (t Terrain) String() string {
 
 	case Water:
 		return chalk.Blue.Color("W")
+
+	case MountainsGoldStrike:
+		return chalk.Blue.Color("Gc")
 	}
 
 	return ""

@@ -19,15 +19,17 @@ enum Terrain {
   village,
   @JsonValue(6)
   water,
+  @JsonValue(7)
+  mountainsGoldStrike
 }
 
-class Terrains {
-  Terrains(this._list);
-
-  final List<Terrain> _list;
-
-  List<int> toJson() => this._list?.map((e) => _$TerrainEnumMap[e])?.toList();
-}
+// class Terrains {
+//   Terrains(this._list);
+//
+//   final List<Terrain> _list;
+//
+//   List<int> toJson() => this._list?.map((e) => _$TerrainEnumMap[e])?.toList();
+// }
 
 @JsonSerializable(createToJson: false)
 class Game {
@@ -52,11 +54,31 @@ class Player {
 }
 
 @JsonSerializable()
+class Rating {
+  Rating();
+
+  int first;
+  int second;
+  int gold;
+  int monster;
+  
+  int get score => first+second+gold-monster;
+
+  factory Rating.fromJson(Map<String, dynamic> json) => _$RatingFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RatingToJson(this);
+}
+
+@JsonSerializable()
 class Plan {
   Plan();
 
   List<Pos> ruins;
   List<Terrain> tiles;
+  int gold;
+  List<Rating> ratings;
+  
+  int get score => ratings.fold(0, (score, rating) => score+rating.score);
 
   int get size => sqrt(tiles.length).toInt();
 
@@ -70,6 +92,15 @@ class Pos {
   Pos(this.x, this.y)
       : assert(x != null),
         assert(y != null);
+
+  factory Pos.fromIndex({int length, int index}) {
+    final x = index % length;
+    final y = (index - x) ~/ length;
+
+    return Pos(x, y);
+  }
+
+  int toIndex(int length) => y * length + x;
 
   int x;
   int y;

@@ -1,6 +1,8 @@
 package cartograph
 
-import "github.com/masseelch/go-token"
+import (
+	"github.com/masseelch/go-token"
+)
 
 type (
 	Game struct {

@@ -36,6 +36,7 @@ func (c *Client) readPump() {
 
 	for {
 		_, message, err := c.conn.ReadMessage()
+
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("error: %v", err)
@@ -44,7 +45,7 @@ func (c *Client) readPump() {
 		}
 
 		// Get the new tile data.
-		if err := json.Unmarshal(message, &c.hub.game.Players[c.nickname].Plan.Tiles); err != nil {
+		if err := json.Unmarshal(message, c.hub.game.Players[c.nickname].Plan); err != nil {
 			log.Printf("error: %v\n", err)
 		}
 
